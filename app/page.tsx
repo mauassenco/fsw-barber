@@ -4,14 +4,18 @@ import { Button } from './_components/ui/button';
 import { Input } from './_components/ui/input';
 import Image from 'next/image';
 import { Card, CardContent } from './_components/ui/card';
-import { Badge } from './_components/ui/badge';
-import { Avatar } from './_components/ui/avatar';
-import { AvatarImage } from '@radix-ui/react-avatar';
 import { db } from './_lib/prisma';
 import BarbershopItem from './_components/BarberShopItem';
+import { quickSearchOptions } from './_constants/search';
+import BookingItem from './_components/BoookingItem';
 
 const Home = async () => {
   const barbershop = await db.barbershop.findMany({});
+  const popularBarbershop = await db.barbershop.findMany({
+    orderBy: {
+      name: 'desc',
+    },
+  });
 
   return (
     <>
@@ -29,6 +33,22 @@ const Home = async () => {
             <SearchIcon />
           </Button>
         </div>
+
+        {/* Quick Search */}
+        <div className="mt-6 flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+          {quickSearchOptions.map((option) => (
+            <Button key={option.title} className="gap-2" variant="secondary">
+              <Image
+                src={option.imageUrl}
+                width={16}
+                height={16}
+                alt={option.title}
+              />
+              {option.title}
+            </Button>
+          ))}
+        </div>
+
         {/* Banner */}
         <div className="relative mt-6 h-[150px] w-full">
           <Image
@@ -40,31 +60,7 @@ const Home = async () => {
         </div>
 
         {/* Appointments */}
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
-          Agendamentos
-        </h2>
-
-        <Card className="rounded-xl">
-          <CardContent className="flex justify-between p-0">
-            {/* Left */}
-            <div className="flex flex-col gap-2 py-5 pl-5">
-              <Badge className="w-fit">Confirmado</Badge>
-              <h3 className="font-semibold">Corte de Cabelo</h3>
-              <div className="flex items-center gap-2">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png"></AvatarImage>
-                </Avatar>
-                <p>Barbearia FWS</p>
-              </div>
-            </div>
-            {/* Right */}
-            <div className="flex flex-col items-center justify-center border-l-2 border-solid px-5">
-              <p className="text-sm">Agosto</p>
-              <p className="text-3xl">05</p>
-              <p className="text-sm">20:00</p>
-            </div>
-          </CardContent>
-        </Card>
+        <BookingItem />
 
         {/* Recomendations */}
         <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
@@ -75,7 +71,26 @@ const Home = async () => {
             <BarbershopItem key={barbershop.id} barbershop={barbershop} />
           ))}
         </div>
+
+        {/* Populars */}
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+          Populares
+        </h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {popularBarbershop.map((barbershop) => (
+            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+          ))}
+        </div>
       </div>
+      <footer>
+        <Card>
+          <CardContent className="pc-5 py-6">
+            <p className="text-sm text-gray-400">
+              © 2023 Copyright <span className="font-bold">FSW Barber</span>
+            </p>
+          </CardContent>
+        </Card>
+      </footer>
     </>
   );
 };
