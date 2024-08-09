@@ -7,6 +7,7 @@ import { db } from './_lib/prisma';
 import BarbershopItem from './_components/BarberShopItem';
 import { quickSearchOptions } from './_constants/search';
 import BookingItem from './_components/BoookingItem';
+import HeaderGeetings from './_components/HeaderGeetings';
 
 const Home = async () => {
   const barbershop = await db.barbershop.findMany({});
@@ -22,8 +23,7 @@ const Home = async () => {
       <Header />
       {/* Text */}
       <div className="p-5">
-        <h2 className="text-xl font-semibold">Olá, Maurício</h2>
-        <p>Segunda-feira, 5 de agosto</p>
+        <HeaderGeetings />
 
         {/* Search */}
         <div className="mt-6 flex items-center gap-2">
