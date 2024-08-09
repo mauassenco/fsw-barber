@@ -2,6 +2,8 @@ import { MenuIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import Image from 'next/image';
+import { Sheet, SheetTrigger } from './ui/sheet';
+import SidebarSheet from './SidebarSheet';
 
 const Header = () => {
   return (
@@ -13,9 +15,14 @@ const Header = () => {
           width={120}
           height={18}
         />
-        <Button size={'icon'} variant={'outline'}>
-          <MenuIcon />
-        </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="secondary" size="icon">
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+          <SidebarSheet />
+        </Sheet>
       </CardContent>
     </Card>
   );
